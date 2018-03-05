@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <p:dialog modal="true" widgetVar="statusDialog" header="Procesando"
+                  draggable="false" closable="false" resizable="false">
+            <p:graphicImage value="./../../images/procesando.gif" />
+        </p:dialog>
+        <h:form id="principal">
+            <p:growl id="growl" showDetail="true" sticky="true" />  
+            <p:remoteCommand name="rc" update="Conexiones" />
+            <p:panelGrid class="ui-noborder" id="gridPrincipal">
+                <f:facet name="header">  
+                    <p:row>  
+                        <p:column style="font-weight: bold;">Paso 1</p:column>  
+                        <p:column style="font-weight: bold;" rendered="#{analizadroArbolExpancionMinimaBean.verConexiones != 'n'}" >Paso 2</p:column>  
+                        <p:column style="font-weight: bold;" rendered="#{analizadroArbolExpancionMinimaBean.arbolExpancion.size() !=0}" >Codigo</p:column> 
+
+                    </p:row>  
+                </f:facet>
+
+                <p:column>
+                    <p:panelGrid  columns="2" >
+                        <p:outputLabel for="TotalNodos" value="Total de nodos: "/>
+                        <p:inputNumber id="TotalNodos" maxValue="100"  value="#{analizadroArbolExpancionMinimaBean.nodos}"/>
+                        <p:outputLabel for="TotalAristas" value="Total de aristas: "/>
+                        <p:inputNumber id="TotalAristas" value="#{analizadroArbolExpancionMinimaBean.aristas}"  />
+                        <p:commandButton value="Enviar" id="enviar"   styleClass="ui-priority-primary" update=":principal:Conexiones, :principal:gridPrincipal, growl"  actionListener="#{analizadroArbolExpancionMinimaBean.nuevoArbol()}" />
+
+                    </p:panelGrid>
+                </p:column>
+                <p:column>
+                    <h:panelGrid columns="2" id="Conexiones"   >
+
+
+                        <p:outputLabel for="Nodo1" value="Nodo 1: " rendered="#{analizadroArbolExpancionMinimaBean.verConexiones != 'n'}"/>
+                        <p:inputNumber id="Nodo1" rendered="#{analizadroArbolExpancionMinimaBean.verConexiones != 'n'}" value="#{analizadroArbolExpancionMinimaBean.nodo1}"/>  
+
+
+                        <p:outputLabel for="Nodo2" value="Nodo 2: " rendered="#{analizadroArbolExpancionMinimaBean.verConexiones != 'n'}" />
+                        <p:inputNumber id="Nodo2" rendered="#{analizadroArbolExpancionMinimaBean.verConexiones != 'n'}" value="#{analizadroArbolExpancionMinimaBean.nodo2}"/>  
+
+
+                        <p:outputLabel for="pesoArista" value="Peso de la arista: " rendered="#{analizadroArbolExpancionMinimaBean.verConexiones != 'n'}" />
+                        <p:inputNumber id="pesoArista" rendered="#{analizadroArbolExpancionMinimaBean.verConexiones != 'n'}" value="#{analizadroArbolExpancionMinimaBean.pesoArista}"/>  
+
+
+                        <p:commandButton  rendered="#{analizadroArbolExpancionMinimaBean.sizeArbol != 0}" value="Siguiente" id="Siguiente" update=":principal:Conexiones, :principal:gridPrincipal"   styleClass="ui-priority-primary" actionListener="#{analizadroArbolExpancionMinimaBean.dot()}" />
+
+                    </h:panelGrid>
+                </p:column>
+
+                <p:column>
+                    <p:dataList   var="row" value="#{analizadroArbolExpancionMinimaBean.arbolExpancion}" rendered="#{analizadroArbolExpancionMinimaBean.arbolExpancion.size() !=0}">
+
+                        <p:outputLabel  value="#{row.nodo1} --- #{row.nodo2} | #{row.pesoArista}"/>
+
+
+                    </p:dataList >
+                    <p:commandButton  rendered="#{analizadroArbolExpancionMinimaBean.sizeArbol == 0 and analizadroArbolExpancionMinimaBean.verConexiones !='n'  }" onclick="setTimeout('rc()', 5000);" value="Generar Arbol" id="generaArbol"  update=":principal:Conexiones, :principal:gridPrincipal, :principal:growl"  styleClass="ui-priority-primary" actionListener="#{analizadroArbolExpancionMinimaBean.analizaArbol()}"  />
+                </p:column>
+            </p:panelGrid>
+        </h:form>
+
+        <h:form id="segundo"   style="width: 100%"  >
+            <p:remoteCommand name="rc" update="diagrama, diagrama2"  />
+            <p:panelGrid columns="2" style="width: 100%;" >
+                <p:panel widgetVar="graf" >
+
+                    <h:panelGrid id="diagrama"  >
+                        <h:outputText value="Grafo original:">  </h:outputText>
+                        
+
+
+                        <object> <embed id="image" src="#{analizadroArbolExpancionMinimaBean.file}" style='width: 100%' /></object>
+
+
+
+                    </h:panelGrid>
+                </p:panel>
+                <p:panel>
+                    <h:panelGrid id="diagrama2"  >
+
+                        <h:outputText value="Arbol expansion minima:">  </h:outputText>
+
+                        <object> <embed id="image2" src="#{analizadroArbolExpancionMinimaBean.file2}" style='width: 100%' /></object>
+
+                        
+                        <h:outputText value="Costo minimo de todas las aristas: #{analizadroArbolExpancionMinimaBean.minimoPesoArbol}"></h:outputText>
+                    </h:panelGrid>
+
+                </p:panel>
+            </p:panelGrid>
+        </h:form>
+
+        <script type="text/javascript">
+            function saludo() {
+                alert("Han pasado 3 segundos");
+                document.getElementById('asignar').click();
+            }
+        </script>
+
+
+
+    </h:body>
+</html>
+
