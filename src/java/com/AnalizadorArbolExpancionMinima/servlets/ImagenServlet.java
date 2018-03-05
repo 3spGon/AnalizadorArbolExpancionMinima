@@ -39,6 +39,7 @@ public class ImagenServlet extends HttpServlet {
             //obteniendo el archivo d eimagen.
             String file = request.getParameter("file");
             System.out.println(file + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+            //en la siguiente linea debe pintar una direccion en su computadora
             BufferedInputStream in = new BufferedInputStream(new FileInputStream("C:\\Users\\NESPINOZA\\Documents\\" + file));
             System.out.println(in + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             // obteniendo el contenido d ela imagen.

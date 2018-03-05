@@ -130,6 +130,7 @@ public class AnalizadroArbolExpancionMinimaBean implements Serializable {
 
     public void creaImagenGrafo(String texto, String file, String graf) {
         int n = 0;
+        //en la siguiente linea debe pintar una direccion en su computadora
         String ruta = "C:\\Users\\NESPINOZA\\Documents\\NetBeansProjects\\AnalizadorArbolExpancionMinima\\web\\" + graf;
         File archivo = new File(ruta);
         BufferedWriter bw;
@@ -149,7 +150,9 @@ public class AnalizadroArbolExpancionMinimaBean implements Serializable {
 
         try {
 
+            //aca va la direccion donde esta instalado su libreria Graphviz
             String doPath = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\sfdp.exe";
+            //en la siguiente linea debe pintar una direccion en su computadora
             String fileInputPath = "C:\\Users\\NESPINOZA\\Documents\\NetBeansProjects\\AnalizadorArbolExpancionMinima\\web\\" + graf;
             String fileOuputPath = "C:\\Users\\NESPINOZA\\Documents\\NetBeansProjects\\AnalizadorArbolExpancionMinima\\web\\" + file;
             String tParam = "-Tsvg";
